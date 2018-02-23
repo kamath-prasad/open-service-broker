@@ -2,6 +2,7 @@ package com.swisscom.cloud.sb.broker.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.swisscom.cloud.sb.broker.cfapi.dto.ProvisioningDto
+
 import com.swisscom.cloud.sb.broker.error.ErrorCode
 import com.swisscom.cloud.sb.broker.model.*
 import com.swisscom.cloud.sb.broker.model.repository.CFServiceRepository
@@ -55,8 +56,13 @@ class ProvisioningController extends BaseController {
 
         ProvisionResponse provisionResponse = provisioningService.provision(createProvisionRequest(serviceInstanceGuid, provisioningDto, acceptsIncomplete))
 
-        return new ResponseEntity<ProvisionResponseDto>(new ProvisionResponseDto(dashboard_url: provisionResponse.dashboardURL),
-                provisionResponse.isAsync ? HttpStatus.ACCEPTED : HttpStatus.CREATED)
+        if(provisionResponse.extensions){
+            return new ResponseEntity<ProvisionResponseDto>(new ProvisionResponseDto(dashboard_url: provisionResponse.dashboardURL, extension_apis: provisionResponse.extensions),
+                    provisionResponse.isAsync ? HttpStatus.ACCEPTED : HttpStatus.CREATED)
+        }else{
+            return new ResponseEntity<ProvisionResponseDto>(new ProvisionResponseDto(dashboard_url: provisionResponse.dashboardURL),
+                    provisionResponse.isAsync ? HttpStatus.ACCEPTED : HttpStatus.CREATED)
+        }
     }
 
     private ProvisionRequest createProvisionRequest(String serviceInstanceGuid, ProvisioningDto provisioning, boolean acceptsIncomple) {
