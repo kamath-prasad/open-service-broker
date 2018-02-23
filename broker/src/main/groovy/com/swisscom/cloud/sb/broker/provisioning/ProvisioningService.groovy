@@ -2,6 +2,7 @@ package com.swisscom.cloud.sb.broker.provisioning
 
 import com.swisscom.cloud.sb.broker.context.CloudFoundryContextRestrictedOnly
 import com.swisscom.cloud.sb.broker.util.servicecontext.ServiceContextHelper
+import com.swisscom.cloud.sb.broker.cfextensions.ExtensionProvider
 import com.swisscom.cloud.sb.broker.error.ErrorCode
 import com.swisscom.cloud.sb.broker.model.DeprovisionRequest
 import com.swisscom.cloud.sb.broker.model.Plan
@@ -30,13 +31,16 @@ class ProvisioningService {
         handleAsyncClientRequirement(provisionRequest.plan, provisionRequest.acceptsIncomplete)
         def instance = provisioningPersistenceService.createServiceInstance(provisionRequest)
         def serviceProvider = serviceProviderLookup.findServiceProvider(provisionRequest.plan)
-
         def context = ServiceContextHelper.convertFrom(provisionRequest.serviceContext)
         if (provisionRequest.serviceContext && serviceProvider instanceof CloudFoundryContextRestrictedOnly && !(context instanceof CloudFoundryContext)) {
             ErrorCode.CLOUDFOUNDRY_CONTEXT_REQUIRED.throwNew()
         }
 
         ProvisionResponse provisionResponse = serviceProvider.provision(provisionRequest)
+        if (serviceProvider instanceof ExtensionProvider){
+            log.info("THIS IS AN INSTANCEOF")
+            provisionResponse.extensions = [serviceProvider.buildExtension()]
+        }
         instance = provisioningPersistenceService.updateServiceInstanceCompletion(instance, !provisionResponse.isAsync)
         provisioningPersistenceService.updateServiceDetails(provisionResponse.details, instance)
         return provisionResponse

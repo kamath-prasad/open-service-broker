@@ -6,6 +6,7 @@ import com.swisscom.cloud.sb.broker.backup.shield.ShieldTarget
 import com.swisscom.cloud.sb.broker.binding.BindRequest
 import com.swisscom.cloud.sb.broker.binding.BindResponse
 import com.swisscom.cloud.sb.broker.binding.UnbindRequest
+import com.swisscom.cloud.sb.broker.cfextensions.Extension
 import com.swisscom.cloud.sb.broker.cfextensions.serviceusage.ServiceUsageProvider
 import com.swisscom.cloud.sb.broker.model.*
 import com.swisscom.cloud.sb.broker.provisioning.DeprovisionResponse
@@ -97,5 +98,10 @@ class DummySynchronousBackupCapableServiceProvider implements ServiceProvider, B
     String shieldAgentUrl(ServiceInstance serviceInstance) {
         log.info("shieldAgentUrl for ${serviceInstance.guid}")
         return StringGenerator.randomUuid()
+    }
+
+    @Override
+    Extension buildExtension(){
+        return new Extension(discovery_url: "URL")
     }
 }
