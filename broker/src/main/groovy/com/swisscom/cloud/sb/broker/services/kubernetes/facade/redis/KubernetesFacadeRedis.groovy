@@ -94,7 +94,7 @@ class KubernetesFacadeRedis extends AbstractKubernetesFacade<KubernetesRedisConf
     }
 
     @Override
-    Extension buildExtension(){
-        return new Extension(discovery_url: kubernetesServiceConfig.discoveryURL)
+    Collection<Extension> buildExtensions(){
+        return [new Extension(discovery_url: kubernetesServiceConfig.discoveryURL)]
     }
 }
