@@ -70,6 +70,7 @@ class ProvisioningController extends BaseController {
         log.trace("ProvisioningDto:${provisioningDto.toString()}")
 
         ProvisionResponse provisionResponse = provisioningService.provision(createProvisionRequest(serviceInstanceGuid, provisioningDto, acceptsIncomplete))
+
         if(provisionResponse.extensions){
             return new ResponseEntity<ProvisionResponseDto>(new ProvisionResponseDto(dashboard_url: provisionResponse.dashboardURL, extension_apis: provisionResponse.extensions),
                     provisionResponse.isAsync ? HttpStatus.ACCEPTED : HttpStatus.CREATED)

@@ -2,7 +2,6 @@ package com.swisscom.cloud.sb.broker.functional
 
 import com.swisscom.cloud.sb.broker.services.common.ServiceProviderLookup
 import com.swisscom.cloud.sb.broker.util.test.DummyExtension.DummyExtensionsServiceProvider
-
 import com.swisscom.cloud.sb.client.model.ProvisionResponseDto
 import org.springframework.http.ResponseEntity
 
