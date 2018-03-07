@@ -22,9 +22,13 @@ class ExtensionProviderFunctionalSpec extends BaseFunctionalSpec{
         "DummyExtensionURL" == res.body.extension_apis[0].discovery_url
     }
 
-//    def "Execute async extension"(){
-//
-//    }
+    def "Execute async extension"(){
+        when:
+        def res = serviceBrokerClient.unlockUser(serviceLifeCycler.serviceInstanceId)
+        println("res = " + res)
+        then:
+        noExceptionThrown()
+    }
 
     def "Execute sync extension"(){
         when:
